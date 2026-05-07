@@ -2,16 +2,19 @@ package com.example.stringutils;
 
 /**
  * Naive first attempt at a dynamic programming solution to find the longest common substring of two strings.
- * The solution is O(M*N) where M is the length of the first string and N is the length of the second string.
+ * This solution uses a 2D array to store the lengths of common suffixes.
+ * The time complexity of this solution is O(M*N) where M is the length of the first string and N is the length of the second string.
+ * The space complexity is also O(M*N) due to the 2D `lens` array.
  */
 class LongestCommonSubstring1 {
     /**
-     * Find the longest common substring of two strings.
-     * This algorithm always gets the first longest substring.
+     * Finds the longest common substring of two strings using a single-threaded dynamic programming approach.
+     * This algorithm has a time complexity of O(M*N) and space complexity of O(M*N).
+     * If multiple longest common substrings exist, this method returns the first one encountered.
      *
-     * @param str1 First string to compare.
-     * @param str2 Second string to compare.
-     * @return A new string with the longest common substring.
+     * @param str1 The first string to compare. Must not be null.
+     * @param str2 The second string to compare. Must not be null.
+     * @return A new string containing the longest common substring, or an empty string if no common substring is found.
      */
     public static String longestSubstring(final String str1, final String str2) {
         if (str1.isEmpty() || str2.isEmpty()) {
