@@ -3,11 +3,10 @@ package com.example.test.sort;
 import java.util.Comparator;
 
 public class QuickSort<T> extends AbstractSort<T> {
-	protected void swap(T[] a, int i, int j) {
+	protected void swap(final T[] a, final int i, final int j) {
 		T tmp = a[i];
 		a[i] = a[j];
 		a[j] = tmp;
-		tmp = null;
 	}
 
 	protected boolean isLessThan(final T first, final T second) {
@@ -46,41 +45,40 @@ public class QuickSort<T> extends AbstractSort<T> {
 		}
 	}
 
-	protected void quickSort(T[] a, final int start, final int end) {
-		int i;
-		int j;
+	private int partition(T[] a, final int start, final int end) {
 		final T pivot;
+		int i = start;
+		int j = end;
 
-		if (end <= start) {
-			return;
-		}
-
-		medianOf3Swap(a, start, (end - start + 1) / 2, end);
+		medianOf3Swap(a, start, (end - start) / 2, end);
 
 		pivot = a[start];
 
-		for (i = start, j = end; i <= j;) {
-			while (isLessThan(a[i], pivot)) {
-				i++;
-			}
+		while (isLessThan(a[i], pivot)) {
+			i++;
+		}
 
-			if (i >= end) {
-				return;
-			}
+		while (isLessThan(pivot, a[j])) {
+			j--;
+		}
 
-			while (isLessThan(a[j], pivot)) {
-				j--;
-			}
-
-			if (i <= j) {
+		for (; i <= j; j--) {
+			if (isLessThan(a[j], pivot)) {
 				swap(a, i, j);
 				i++;
-				j--;
 			}
 		}
 
-		quickSort(a, start, i - 1);
-		quickSort(a, i, end);
+		return i;
+	}
+
+	protected void quickSort(T[] a, final int start, final int end) {
+		if (start < end) {
+			final int pivot = partition(a, start, end);
+
+			quickSort(a, start, pivot - 1);
+			quickSort(a, pivot + 1, end);
+		}
 	}
 
 	public QuickSort(Comparator<T> cmp) {

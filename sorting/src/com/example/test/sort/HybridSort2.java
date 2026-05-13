@@ -137,23 +137,18 @@ public class HybridSort2<T> extends AbstractSort<T> {
 		int j = end;
 		final T pivot = a[start];
 
-		while (i <= j) {
-			while (isLessThan(a[i], pivot)) {
-				i++;
-			}
+		while (isLessThan(a[i], pivot)) {
+			i++;
+		}
 
-			if(i >= end) {
-				return i;
-			}
+		while (isLessThan(pivot, a[j])) {
+			j--;
+		}
 
-			while (isLessThan(a[j], pivot)) {
-				j--;
-			}
-
-			if (i <= j) {
+		for (; i <= j; j--) {
+			if (isLessThan(a[j], pivot)) {
 				swap(a, i, j);
 				i++;
-				j--;
 			}
 		}
 
@@ -161,19 +156,17 @@ public class HybridSort2<T> extends AbstractSort<T> {
 	}
 
 	protected void quickSort(final T[] a, final int start, final int end) {
-		final int pivot;
-		final int mid = (end - start + 1) / 2;
+		if (start < end) {
+			final int pivot;
+			final int mid = (end - start) / 2;
 
-		medianOf3Swap(a, start, mid, end);
+			medianOf3Swap(a, start, mid, end);
 
-		pivot = quickSortHelp(a, start, end);
+			pivot = quickSortHelp(a, start, end);
 
-		if(pivot >= end) {
-			return;
+			hybridSort(a, start, pivot - 1);
+			hybridSort(a, pivot + 1, end);
 		}
-
-		hybridSort(a, start, pivot - 1);
-		hybridSort(a, pivot, end);
 	}
 
 	protected void hybridSort(final T[] a, final int start, final int end) {

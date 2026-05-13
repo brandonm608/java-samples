@@ -26,7 +26,7 @@ public class Application {
 		Integer[] a = new Integer[length];
 
 		for (int i = 0; i < length; i++) {
-			a[i] = Integer.valueOf((int) (Math.random() * Integer.MAX_VALUE));
+			a[i] = (int) (Math.random() * 500);
 		}
 
 		return a;
@@ -63,7 +63,7 @@ public class Application {
 			String choice = readChoice(out, reader);
 			while (!choice.equals("q")) {
 				Sort<Integer> algorithm = getAlgorithm(choice);
-				Integer[] filledArray = createFilledArray(10000);
+				Integer[] filledArray = createFilledArray(100000);
 				Integer[] copy1 = Arrays.copyOf(filledArray, filledArray.length);
 				Integer[] copy2 = Arrays.copyOf(filledArray, filledArray.length);
 				Integer[] copy3 = Arrays.copyOf(filledArray, filledArray.length);
@@ -81,11 +81,28 @@ public class Application {
 				sort(out, algorithm, copy3, choice);
 
 				isArrayEqual = isArraysEqual(filledArray, copy1);
-				println(out, "Matches Arrays Sort: " + isArrayEqual);
+
+				if (!isArrayEqual) {
+					throw new RuntimeException("The array sorted by the algorithm does not match the JDK sorted array!");
+				}
+
+				for (int i = 0, j = filledArray.length - 1; i < j; i++, j--) {
+					int tmp = filledArray[i];
+					filledArray[i] = filledArray[j];
+					filledArray[j] = tmp;
+				}
+
+				copy1 = Arrays.copyOf(filledArray, filledArray.length);
+
+				println(out, "Time to sort a reversed sorted array:");
+				sort(out, algorithm, filledArray, ARRAYS_SORT);
+				sort(out, algorithm, copy1, choice);
 				println(out);
 
-				if (!isArrayEqual && deltaTime1 > 0) {
-					System.exit(1);
+				isArrayEqual = isArraysEqual(filledArray, copy1);
+
+				if (!isArrayEqual) {
+					throw new RuntimeException("The array sorted by the algorithm does not match the JDK sorted array!");
 				}
 
 				choice = readChoice(out, reader);
@@ -94,11 +111,6 @@ public class Application {
 				Arrays.setAll(copy1, i -> null);
 				Arrays.setAll(copy2, i -> null);
 				Arrays.setAll(copy3, i -> null);
-
-				filledArray = null;
-				copy1 = null;
-				copy2 = null;
-				copy3 = null;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -107,17 +119,13 @@ public class Application {
 
 	private static long medianOf3(long a1, long a2, long a3) {
 		if (a1 < a2) {
-			if (a1 < a3) {
-				if (a2 < a3) {
-					return a2;
-				} else {
-					return a3;
-				}
+			if (a2 < a3) {
+				return a2;
 			} else {
-				if (a1 < a2) {
-					return a1;
+				if (a1 < a3) {
+					return a3;
 				} else {
-					return a2;
+					return a1;
 				}
 			}
 		} else {
