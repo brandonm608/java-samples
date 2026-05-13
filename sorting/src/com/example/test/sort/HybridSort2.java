@@ -145,7 +145,7 @@ public class HybridSort2<T> extends AbstractSort<T> {
 			j--;
 		}
 
-		for (; i <= j; j--) {
+		for (; i < j; j--) {
 			if (isLessThan(a[j], pivot)) {
 				swap(a, i, j);
 				i++;
