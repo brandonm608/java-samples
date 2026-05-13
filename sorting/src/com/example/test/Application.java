@@ -106,11 +106,6 @@ public class Application {
 				}
 
 				choice = readChoice(out, reader);
-
-				Arrays.setAll(filledArray, i -> null);
-				Arrays.setAll(copy1, i -> null);
-				Arrays.setAll(copy2, i -> null);
-				Arrays.setAll(copy3, i -> null);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
