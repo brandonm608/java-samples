@@ -60,11 +60,15 @@ public class QuickSort<T> extends AbstractSort<T> {
 		pivot = a[start];
 
 		for (i = start, j = end; i <= j;) {
-			while (compare(a[i], pivot) < 0) {
+			while (isLessThan(a[i], pivot)) {
 				i++;
 			}
 
-			while (compare(a[j], pivot) > 0) {
+			if (i >= end) {
+				return;
+			}
+
+			while (isLessThan(a[j], pivot)) {
 				j--;
 			}
 

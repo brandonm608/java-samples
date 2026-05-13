@@ -138,11 +138,15 @@ public class HybridSort2<T> extends AbstractSort<T> {
 		final T pivot = a[start];
 
 		while (i <= j) {
-			while (compare(a[i], pivot) < 0) {
+			while (isLessThan(a[i], pivot)) {
 				i++;
 			}
 
-			while (compare(a[j], pivot) > 0) {
+			if(i >= end) {
+				return i;
+			}
+
+			while (isLessThan(a[j], pivot)) {
 				j--;
 			}
 
@@ -163,6 +167,10 @@ public class HybridSort2<T> extends AbstractSort<T> {
 		medianOf3Swap(a, start, mid, end);
 
 		pivot = quickSortHelp(a, start, end);
+
+		if(pivot >= end) {
+			return;
+		}
 
 		hybridSort(a, start, pivot - 1);
 		hybridSort(a, pivot, end);
