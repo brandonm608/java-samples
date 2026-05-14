@@ -13,64 +13,83 @@ public class QuickSort<T> extends AbstractSort<T> {
 		return compare(first, second) < 0;
 	}
 
-	protected void swapStartLessThanMid(final T[] a, final int start, final int mid, final int end) {
-		if (isLessThan(a[start], a[end])) {
-			if (isLessThan(a[mid], a[end])) {
-				swap(a, start, mid);
-			} else {
-				swap(a, start, end);
-			}
-		} else {
-			if (!isLessThan(a[start], a[mid])) {
-				swap(a, start, mid);
-			}
-		}
-	}
-
-	protected void swapStartNotLessThanMid(final T[] a, final int start, final int mid, final int end) {
-		if (isLessThan(a[mid], a[end])) {
-			if (!isLessThan(a[start], a[end])) {
-				swap(a, start, end);
-			}
-		} else {
-			swap(a, start, mid);
-		}
+	protected boolean isLessThanEqual(final T first, final T second) {
+		return compare(first, second) <= 0;
 	}
 
 	protected void medianOf3Swap(final T[] a, final int start, final int mid, final int end) {
+		/*
+		3 cases to consider.
+		start < mid && mid < end || end < mid && mid < start
+		mid < start && start < end || end < start && start < mid
+		start < end && end < mid || mid < end && end < start
+		*/
+
 		if (isLessThan(a[start], a[mid])) {
-			swapStartLessThanMid(a, start, mid, end);
+			// start < mid
+			if (isLessThan(a[mid], a[end])) {
+				// start < mid && mid < end
+				swap(a, end, mid);
+			} else {
+				// start < mid && end < mid
+				if (isLessThan(a[end], a[start])) {
+					// start < mid && end < mid && end < start
+					swap(a, end, start);
+				}
+				// Otherwise end is the median item and in the correct place.
+			}
 		} else {
-			swapStartNotLessThanMid(a, start, mid, end);
+			// mid < start
+			if (isLessThan(a[start], a[end])) {
+				// mid < start && start < end
+				swap(a, end, start);
+			} else {
+				if (isLessThan(a[end], a[mid])) {
+					// mid < start && end < start && end < mid
+					swap(a, end, mid);
+				}
+				// Otherwise end is the median item and in the correct place.
+			}
 		}
 	}
 
 	private int partition(T[] a, final int start, final int end) {
 		final T pivot;
 		int i = start;
-		int j = end;
 
-		medianOf3Swap(a, start, (end - start) / 2, end);
+		medianOf3Swap(a, start, (end - start + 1) / 2, end);
+		pivot = a[end];
 
-		pivot = a[start];
-		// pivot starts out on the right side of the array.
-		i++;
-
-		for (; i < j; j--) {
-			if (isLessThan(a[j], pivot)) {
+		// since we put the pivot at the end, we need to iterate j till end - 1.
+		for (int j = start; j < end; j++) {
+			if (isLessThanEqual(a[j], pivot)) {
 				swap(a, i, j);
 				i++;
 			}
 		}
 
-		// put the pivot variable where it rightly belongs.
-		swap(a, start, i);
+		// put the pivot variable where it rightly belongs. Which is right at i. The value of i being the last
+		// index on the left side of the array not less than or equal to the pivot.
+		swap(a, end, i);
 		return i;
 	}
 
-	protected void quickSort(T[] a, final int start, final int end) {
+	protected void quickSort(T[] a, int start, int end) {
 		if (start < end) {
-			final int pivot = partition(a, start, end);
+			final int pivot;
+
+			// Simple optimization to reduce the pitfalls of many duplicate items.
+			if ((end - start) > 2) {
+				for (int i = start + 1; i < end && isLessThanEqual(a[start], a[i]); i++) {
+					start++;
+				}
+
+				for (int i = end - 1; start <= i && isLessThanEqual(a[start], a[i]); i--) {
+					end--;
+				}
+			}
+
+			pivot = partition(a, start, end);
 
 			quickSort(a, start, pivot - 1);
 			quickSort(a, pivot + 1, end);

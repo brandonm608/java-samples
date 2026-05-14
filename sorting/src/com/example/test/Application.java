@@ -142,7 +142,7 @@ public class Application {
 		if (algorithm == null) {
 			if (isEqual(ARRAYS_SORT, choice)) {
 				deltaTime = System.currentTimeMillis();
-				Arrays.sort(a);
+				Arrays.sort(a, Integer::compareTo);
 				deltaTime = System.currentTimeMillis() - deltaTime;
 			} else {
 				println(out, "Invalid choice\n");
