@@ -135,15 +135,13 @@ public class HybridSort2<T> extends AbstractSort<T> {
 	protected int quickSortHelp(final T[] a, final int start, final int end) {
 		int i = start;
 		int j = end;
-		final T pivot = a[start];
+		final T pivot;
 
-		while (isLessThan(a[i], pivot)) {
-			i++;
-		}
+		medianOf3Swap(a, start, (end - start) / 2, end);
 
-		while (isLessThan(pivot, a[j])) {
-			j--;
-		}
+		pivot = a[start];
+		// pivot starts out on the right side of the array.
+		i++;
 
 		for (; i < j; j--) {
 			if (isLessThan(a[j], pivot)) {
@@ -152,6 +150,8 @@ public class HybridSort2<T> extends AbstractSort<T> {
 			}
 		}
 
+		// put the pivot variable where it rightly belongs.
+		swap(a, start, i);
 		return i;
 	}
 

@@ -53,14 +53,8 @@ public class QuickSort<T> extends AbstractSort<T> {
 		medianOf3Swap(a, start, (end - start) / 2, end);
 
 		pivot = a[start];
-
-		while (isLessThan(a[i], pivot)) {
-			i++;
-		}
-
-		while (isLessThan(pivot, a[j])) {
-			j--;
-		}
+		// pivot starts out on the right side of the array.
+		i++;
 
 		for (; i < j; j--) {
 			if (isLessThan(a[j], pivot)) {
@@ -69,6 +63,8 @@ public class QuickSort<T> extends AbstractSort<T> {
 			}
 		}
 
+		// put the pivot variable where it rightly belongs.
+		swap(a, start, i);
 		return i;
 	}
 
