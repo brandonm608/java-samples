@@ -163,20 +163,7 @@ public class HybridSort2<T> extends AbstractSort<T> {
 
 	protected void quickSort(final T[] a, int start, int end) {
 		if (start < end) {
-			final int pivot;
-
-			// Simple optimization to reduce the pitfalls of many duplicate items.
-			if ((end - start) > 2) {
-				for (int i = start + 1; i < end && isLessThanEqual(a[start], a[i]); i++) {
-					start++;
-				}
-
-				for (int i = end - 1; start <= i && isLessThanEqual(a[start], a[i]); i--) {
-					end--;
-				}
-			}
-
-			pivot = quickSortPartition(a, start, end);
+			final int pivot = quickSortPartition(a, start, end);
 
 			hybridSort(a, start, pivot - 1);
 			hybridSort(a, pivot + 1, end);

@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 
 import com.example.test.sort.HeapSort;
-import com.example.test.sort.HybridSort;
+//TODO: import com.example.test.sort.HybridSort;
 import com.example.test.sort.HybridSort2;
 import com.example.test.sort.MergeSort;
 import com.example.test.sort.QuickSort;
@@ -18,7 +18,7 @@ public class Application {
 	private static final String ARRAYS_SORT = "1";
 	private static final String MERGE_SORT = "2";
 	private static final String HEAP_SORT = "3";
-	private static final String HYBRID_SORT = "4";
+	// TODO: private static final String HYBRID_SORT = "4";
 	private static final String QUICK_SORT = "5";
 	private static final String HYBRID_SORT2 = "6";
 
@@ -45,9 +45,9 @@ public class Application {
 			return new MergeSort<>(Integer::compareTo);
 		} else if (isEqual(HEAP_SORT, choice)) {
 			return new HeapSort<>(Integer::compareTo);
-		} else if (isEqual(HYBRID_SORT, choice)) {
+		} else /* TODO: if (isEqual(HYBRID_SORT, choice)) {
 			return new HybridSort<>(Integer::compareTo);
-		} else if (isEqual(QUICK_SORT, choice)) {
+		} else*/ if (isEqual(QUICK_SORT, choice)) {
 			return new QuickSort<>(Integer::compareTo);
 		} else if (isEqual(HYBRID_SORT2, choice)) {
 			return new HybridSort2<>(Integer::compareTo);
@@ -63,21 +63,28 @@ public class Application {
 			String choice = readChoice(out, reader);
 			while (!choice.equals("q")) {
 				Sort<Integer> algorithm = getAlgorithm(choice);
-				Integer[] filledArray = createFilledArray(1000000);
+				Integer[] filledArray = createFilledArray(100000);
 				Integer[] copy1 = Arrays.copyOf(filledArray, filledArray.length);
 				Integer[] copy2 = Arrays.copyOf(filledArray, filledArray.length);
 				Integer[] copy3 = Arrays.copyOf(filledArray, filledArray.length);
 				long deltaTime1, deltaTime2, deltaTime3;
 				boolean isArrayEqual;
 
-				sort(out, algorithm, filledArray, ARRAYS_SORT);
+				sort(out, null, filledArray, ARRAYS_SORT);
 				deltaTime1 = sort(out, algorithm, copy1, choice);
 				deltaTime2 = sort(out, algorithm, copy2, choice);
 				deltaTime3 = sort(out, algorithm, copy3, choice);
 
 				println(out, "The median time of 3 runs is " + medianOf3(deltaTime1, deltaTime2, deltaTime3) + "ms");
+
+				isArrayEqual = isArraysEqual(filledArray, copy1);
+
+				if (!isArrayEqual) {
+					throw new RuntimeException("The array sorted by the algorithm does not match the JDK sorted array!");
+				}
+
 				println(out, "Time to sort sorted array: ");
-				sort(out, algorithm, copy3, ARRAYS_SORT);
+				sort(out, null, copy3, ARRAYS_SORT);
 				sort(out, algorithm, copy3, choice);
 
 				isArrayEqual = isArraysEqual(filledArray, copy1);
@@ -95,7 +102,7 @@ public class Application {
 				copy1 = Arrays.copyOf(filledArray, filledArray.length);
 
 				println(out, "Time to sort a reversed sorted array:");
-				sort(out, algorithm, filledArray, ARRAYS_SORT);
+				sort(out, null, filledArray, ARRAYS_SORT);
 				sort(out, algorithm, copy1, choice);
 				println(out);
 
@@ -160,9 +167,9 @@ public class Application {
 			print(out, "Merge Sort");
 		} else if (isEqual(HEAP_SORT, choice)) {
 			print(out, "Heap Sort");
-		} else if (isEqual(HYBRID_SORT, choice)) {
+		} else /* TODO: if (isEqual(HYBRID_SORT, choice)) {
 			print(out, "Hybrid Sort");
-		} else if (isEqual(QUICK_SORT, choice)) {
+		} else*/ if (isEqual(QUICK_SORT, choice)) {
 			print(out, "Quick Sort");
 		} else if (isEqual(HYBRID_SORT2, choice)) {
 			print(out, "Hybrid Sort 2");
@@ -195,7 +202,7 @@ public class Application {
 		println(out, ARRAYS_SORT + ": Arrays Sort");
 		println(out, MERGE_SORT + ": Merge Sort");
 		println(out, HEAP_SORT + ": Heap Sort");
-		println(out, HYBRID_SORT + ": Hybrid Sort");
+		// TODO: println(out, HYBRID_SORT + ": Hybrid Sort");
 		println(out, QUICK_SORT + ": Quick Sort");
 		println(out, HYBRID_SORT2 + ": Hybrid Sort 2");
 		print(out, "Enter Choice: ");

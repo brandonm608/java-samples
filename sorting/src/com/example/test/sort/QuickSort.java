@@ -76,20 +76,7 @@ public class QuickSort<T> extends AbstractSort<T> {
 
 	protected void quickSort(T[] a, int start, int end) {
 		if (start < end) {
-			final int pivot;
-
-			// Simple optimization to reduce the pitfalls of many duplicate items.
-			if ((end - start) > 2) {
-				for (int i = start + 1; i < end && isLessThanEqual(a[start], a[i]); i++) {
-					start++;
-				}
-
-				for (int i = end - 1; start <= i && isLessThanEqual(a[start], a[i]); i--) {
-					end--;
-				}
-			}
-
-			pivot = partition(a, start, end);
+			final int pivot = partition(a, start, end);
 
 			quickSort(a, start, pivot - 1);
 			quickSort(a, pivot + 1, end);
