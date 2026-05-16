@@ -4,6 +4,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 public class HybridSort2<T> extends AbstractSort<T> {
+	private static class MutableIntTuple {
+		int first = 0;
+		int second = 0;
+	}
+
 	protected void specialSort3(final T[] sequence, final int start, final int end) {
 		final int tmpIdx2 = start + 1;
 
@@ -55,6 +60,34 @@ public class HybridSort2<T> extends AbstractSort<T> {
 		a[j] = tmp;
 	}
 
+	private void swapAdvanceBoth(final MutableIntTuple tuple, final T[] a, final int left, final int right) {
+		T tmp = a[left];
+		a[left] = a[right];
+		a[right] = tmp;
+
+		tuple.first = left + 1;
+		tuple.second = right + 1;
+	}
+
+	private void swapNextRight(final MutableIntTuple tuple, final T[] a, final int left, int right) {
+		right--;
+		T tmp = a[left];
+		a[left] = a[right];
+		a[right] = tmp;
+
+		tuple.first = left;
+		tuple.second = right;
+	}
+
+	private void swapAdvanceLeftDecrementRight(final MutableIntTuple tuple, final T[] a, final int left, final int right) {
+		T tmp = a[left];
+		a[left] = a[right];
+		a[right] = tmp;
+
+		tuple.first = left + 1;
+		tuple.second = right - 1;
+	}
+
 	protected void merge(final T[] a, final T[] b, int j, int end) {
 		int i;
 		int k = b.length - 1;
@@ -100,8 +133,8 @@ public class HybridSort2<T> extends AbstractSort<T> {
 		return compare(first, second) < 0;
 	}
 
-	protected boolean isLessThanEqual(final T first, final T second) {
-		return compare(first, second) <= 0;
+	protected boolean isEqual(final T first, final T second) {
+		return compare(first, second) == 0;
 	}
 
 	protected void medianOf3Swap(final T[] a, final int start, final int mid, final int end) {
@@ -121,9 +154,11 @@ public class HybridSort2<T> extends AbstractSort<T> {
 				// start < mid && end < mid
 				if (isLessThan(a[end], a[start])) {
 					// start < mid && end < mid && end < start
+					// Therefor end < start < mid
+					// end < start && start < mid
 					swap(a, end, start);
 				}
-				// Otherwise end is the median item and in the correct place.
+				// Otherwise end is the median item.
 			}
 		} else {
 			// mid < start
@@ -133,41 +168,73 @@ public class HybridSort2<T> extends AbstractSort<T> {
 			} else {
 				if (isLessThan(a[end], a[mid])) {
 					// mid < start && end < start && end < mid
+					// Therefor end < mid < start
+					// end < mid && mid < start
 					swap(a, end, mid);
 				}
-				// Otherwise end is the median item and in the correct place.
+				// Otherwise end is the median item.
 			}
 		}
 	}
 
-	protected int quickSortPartition(final T[] a, final int start, final int end) {
+	private void quickSortPartition(MutableIntTuple tuple, final T[] a, final int start, final int end) {
 		final T pivot;
-		int i = start;
+		int unprocessed = start;
+		int pivotsInsertionStart = start;
+		int pivotsStart = end;
 
 		medianOf3Swap(a, start, (end - start + 1) / 2, end);
 		pivot = a[end];
 
-		// since we put the pivot at the end, we need to iterate j till end - 1.
-		for (int j = start; j < end; j++) {
-			if (isLessThanEqual(a[j], pivot)) {
-				swap(a, i, j);
-				i++;
+		// since we put the pivot at the end, we need to iterate unprocessed items till end - 1.
+		while (unprocessed < pivotsStart) {
+			if (isLessThan(a[unprocessed], pivot)) {
+				swapAdvanceBoth(tuple, a, pivotsInsertionStart, unprocessed);
+				pivotsInsertionStart = tuple.first;
+				unprocessed = tuple.second;
+			} else if (isEqual(a[unprocessed], pivot)) {
+				swapNextRight(tuple, a, unprocessed, pivotsStart);
+				unprocessed = tuple.first;
+				pivotsStart = tuple.second;
+			} else {
+				// If nothing has been processed unprocessed must be in the correct location.
+				unprocessed++;
 			}
 		}
 
-		// put the pivot variable where it rightly belongs. Which is right at i. The value of i being the last
-		// index on the left side of the array not less than or equal to the pivot.
-		swap(a, end, i);
-		return i;
+		// reorganize pivots so they are in the center
+		unprocessed = pivotsInsertionStart;
+		for (int i = end; i >= pivotsStart && unprocessed < pivotsStart;) {
+			swapAdvanceLeftDecrementRight(tuple, a, unprocessed, i);
+			unprocessed = tuple.first;
+			i = tuple.second;
+		}
+
+		tuple.first = pivotsInsertionStart;
+		tuple.second = pivotsInsertionStart + end - pivotsStart;
 	}
 
-	protected void quickSort(final T[] a, int start, int end) {
+	private void quickSortInternal(final MutableIntTuple tuple, final T[] a, final int start, final int end) {
 		if (start < end) {
-			final int pivot = quickSortPartition(a, start, end);
+			final int startIndex;
+			final int endIndex;
 
-			hybridSort(a, start, pivot - 1);
-			hybridSort(a, pivot + 1, end);
+			quickSortPartition(tuple, a, start, end);
+
+			// Since tuple is reused store the state.
+			startIndex = tuple.first;
+			endIndex = tuple.second;
+
+			quickSortInternal(tuple, a, start, startIndex - 1);
+			quickSortInternal(tuple, a, endIndex + 1, end);
 		}
+	}
+
+	protected void quickSort(final T[] a, final int start, final int end) {
+		// Create a tuple object here and reuse throughout the code so we do not litter the heap with objects that need
+		// to be garbage collected.
+		final MutableIntTuple tuple = new MutableIntTuple();
+		quickSortInternal(tuple, a, start, end);
 	}
 
 	protected void hybridSort(final T[] a, final int start, final int end) {

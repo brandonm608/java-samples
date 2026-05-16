@@ -63,7 +63,7 @@ public class Application {
 			String choice = readChoice(out, reader);
 			while (!choice.equals("q")) {
 				Sort<Integer> algorithm = getAlgorithm(choice);
-				Integer[] filledArray = createFilledArray(100000);
+				Integer[] filledArray = createFilledArray(1000000);
 				Integer[] copy1 = Arrays.copyOf(filledArray, filledArray.length);
 				Integer[] copy2 = Arrays.copyOf(filledArray, filledArray.length);
 				Integer[] copy3 = Arrays.copyOf(filledArray, filledArray.length);
