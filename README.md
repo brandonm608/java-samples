@@ -3,12 +3,20 @@
 These projects are explorations into various algorithms I would like to know more about. Each directory has its own
 README.md file which gives more information about the project. An overview of the different projects is given below.
 
+# library
+This is a May 2026 rollup of different code I have written. I moved the code out of individual projects primarily for testing
+using JUnit. It has the flexiblity of being reusable module should the need arise. Run `./gradlew build` in the
+utils directory of the library project to build it. The library is located in library/utils/build/libs directory.
+
+## sorting_app
+This is a standalone application for estimating timing of the various sorting algorithms in the library project. To
+build this program, use `./gradlew build` in the sorting_app directory. Note, you must have first built the library
+project. The runnable jar file is located in the sorting_app/app/build/libs directory.
+
+This is heavily modified code written in May 2026 of code from 2019.
+
 ## strings
-This is my most recent project as of May 2026.
+This is code written in May 2026. It will be moving into the library project.
 
 ## data-structures
-This is a project from about 5 years ago. It is an exploration of various data structures.
-
-## sorting
-These are different sorting algorithms from about 5 years ago. Did some minor fixes here in May 2026.
-The updates are very minor to the quicksort algorithm in QuickSort and HybridSort2.
+This is a project from about 2019. It is an exploration of various data structures.
