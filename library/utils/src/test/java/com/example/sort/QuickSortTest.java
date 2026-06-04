@@ -2,12 +2,9 @@ package com.example.sort;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class QuickSortTest extends ExtendedBaseAbstractSortTest {
+public class QuickSortTest extends BaseAbstractSortTest {
     
     final QuickSort<Integer> qs = new QuickSort<>(Integer::compare);
 

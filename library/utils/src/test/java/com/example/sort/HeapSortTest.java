@@ -1,6 +1,6 @@
 package com.example.sort;
 
-public class HeapSortTest extends ExtendedBaseAbstractSortTest {
+public class HeapSortTest extends BaseAbstractSortTest {
 
     HeapSortTest() {
         super("Heap Sort", 1000000);

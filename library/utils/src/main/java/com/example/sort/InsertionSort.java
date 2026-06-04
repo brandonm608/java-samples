@@ -13,6 +13,11 @@ class InsertionSort<T> extends BaseSort<T> {
     }
 
     public void insertionSort(final T[] a, final int start, final int end) {
+        // Protect main loop against not having enough elements to sort. The minimum is 2 elements.
+        if (end - start < 1) {
+            return;
+        }
+
         for (int i = start; i < end; i++) {
             for (int k = i; k >= start; k--) {
                 if (isLeft(a[k + 1], a[k])) {

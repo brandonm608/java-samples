@@ -15,6 +15,8 @@ public abstract class BaseAbstractSortTest {
         this.differentialTestLength = differentialTestLength;
     }
 
+    protected abstract void sort(final Integer[] a);
+
     protected <T> void checkStableSort(final T[] a, final T[] expected) {
         assertEquals(expected.length, a.length, "The array sorted by the " + sortName + " is not the same length as the JDK sorted array!");
 
@@ -48,6 +50,46 @@ public abstract class BaseAbstractSortTest {
         this.sort(a);
 
         checkArray(a, copy);
+    }
+
+    @Test
+    public void emptySortTest() {
+        Integer[] a = {};
+        Integer[] expected = {};
+
+        this.sort(a);
+
+        assertArrayEquals(expected, a);
+    }
+
+    @Test
+    public void oneItemSortTest() {
+        Integer[] a = {1};
+        Integer[] expected = {1};
+
+        this.sort(a);
+
+        assertArrayEquals(expected, a);
+    }
+
+    @Test
+    public void twoItemSortTest1() {
+        Integer[] a = {2, 1};
+        Integer[] expected = {1, 2};
+
+        this.sort(a);
+
+        assertArrayEquals(expected, a);
+    }
+
+    @Test
+    public void twoItemSortTest2() {
+        Integer[] a = {1, 2};
+        Integer[] expected = {1, 2};
+
+        this.sort(a);
+
+        assertArrayEquals(expected, a);
     }
 
     @Test
@@ -132,8 +174,6 @@ public abstract class BaseAbstractSortTest {
 
         assertArrayEquals(expected, a);
     }
-
-    protected abstract void sort(final Integer[] a);
 
     @Test
     public void sortedArrayTest() {

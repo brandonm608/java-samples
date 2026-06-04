@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-public class HybridSortTest extends ExtendedBaseAbstractSortTest {
+public class HybridSortTest extends BaseAbstractSortTest {
 
     final HybridSort<Integer> hs = new HybridSort<>(Integer::compare);
 

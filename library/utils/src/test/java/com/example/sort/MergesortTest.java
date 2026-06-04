@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-public class MergesortTest extends ExtendedBaseAbstractSortTest {
+public class MergesortTest extends BaseAbstractSortTest {
 
     MergesortTest() {
         super("Merge Sort", 1000000);

@@ -3,7 +3,7 @@ package com.example.sort;
 public class InsertionSortTest extends BaseAbstractSortTest {
 
     InsertionSortTest() {
-        super("Special Sort", 15);
+        super("Insertion Sort", 15);
     }
 
     @Override
