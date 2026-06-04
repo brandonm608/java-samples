@@ -15,21 +15,6 @@ public abstract class BaseAbstractSortTest {
         this.differentialTestLength = differentialTestLength;
     }
 
-    protected static class StableTestType implements Comparable<StableTestType> {
-        private final int order;
-        private final int dummy;
-
-        StableTestType(final int order, final int dummy) {
-            this.order = order;
-            this.dummy = dummy;
-        }
-
-        @Override
-        public int compareTo(StableTestType stableTestType) {
-            return Integer.compare(this.order, stableTestType.order);
-        }
-    }
-
     protected <T> void checkStableSort(final T[] a, final T[] expected) {
         assertEquals(expected.length, a.length, "The array sorted by the " + sortName + " is not the same length as the JDK sorted array!");
 
@@ -40,16 +25,6 @@ public abstract class BaseAbstractSortTest {
 
     protected void checkArray(final Integer[] a, final Integer[] expected) {
         assertArrayEquals(expected, a, "The array sorted by the " + sortName + " does not match the JDK sorted array!");
-    }
-
-    protected StableTestType[] createStableTypeFilledArray(final int length) {
-        StableTestType[] a = new StableTestType[length];
-
-        for (int i = 0; i < length; i++) {
-            a[i] = new StableTestType((int)(Math.random() * 500), (int)(Math.random() * Integer.MAX_VALUE));
-        }
-
-        return a;
     }
 
     protected Integer[] createFilledArray(final int length) {

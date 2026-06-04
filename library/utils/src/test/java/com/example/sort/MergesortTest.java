@@ -17,11 +17,11 @@ public class MergesortTest extends ExtendedBaseAbstractSortTest {
 
     @Test
     public void differentialStableSortTest() {
-        StableTestType[] a = createStableTypeFilledArray(getDifferentialTestLength());
-        StableTestType[] expected = Arrays.copyOfRange(a, 0, a.length);
+        Integer[] a = createFilledArray(getDifferentialTestLength());
+        Integer[] expected = Arrays.copyOfRange(a, 0, a.length);
 
-        Arrays.sort(expected, StableTestType::compareTo);
-        MergeSort.sort(a, StableTestType::compareTo);
+        Arrays.sort(expected, Integer::compare);
+        MergeSort.sort(a, Integer::compare);
 
         checkStableSort(a, expected);
     }
