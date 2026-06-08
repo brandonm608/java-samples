@@ -60,7 +60,7 @@ public class HybridSort<T> extends BaseSort<T> {
             final int nextEnd = end - 1;
             swapIfNecessary(a, nextStart, nextEnd);
 
-            if (!isLeftOrSame(a[start], a[nextStart])) {
+            if (!(isLeftOrSame(a[start], a[nextStart]) && isLeftOrSame(a[nextEnd], a[end]))) {
                 break;
             }
 
