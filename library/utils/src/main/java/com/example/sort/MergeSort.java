@@ -31,15 +31,15 @@ public class MergeSort<T> extends BaseSort<T> {
         // and work backwards.
         for (i = length - 1; j >= 0 && k >= 0; i--) {
             // This logic maintains a stable sort.
-            if (isLeft(b[k], a[j])) {
-                // if b[k] comes before a[j], then put a[j] to the right of b[k].
-                a[i] = a[j];
-                j--;
-            } else {
-                // if b[k] is the same as a[j] or to the right of a[j], then put b[k] to the right of b[k].
-                a[i] = b[k];
-                k--;
-            }
+            final boolean bLeft = isLeft(b[k], a[j]);
+
+            // if b[k] is to the left of a[j], then put a[j] to the right of b[k].
+            // Otherwise, put b[k] to the right of a[j].
+            a[i] = bLeft ? a[j] : b[k];
+
+            // Decrement the index of the item placed at i.
+            j = bLeft ? j - 1: j;
+            k = bLeft ? k: k - 1;
         }
 
         // Either a[i] down is already in the right order or a[i] down needs to be set to the

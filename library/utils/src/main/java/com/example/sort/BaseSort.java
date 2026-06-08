@@ -22,7 +22,7 @@ abstract class BaseSort<T> implements Sort<T> {
         return cmp.compare(first, second) <= 0;
     }
 
-    protected void swap(final T[] a, final int i, final int j) {
+    protected static <T> void swap(final T[] a, final int i, final int j) {
         T tmp = a[i];
         a[i] = a[j];
         a[j] = tmp;

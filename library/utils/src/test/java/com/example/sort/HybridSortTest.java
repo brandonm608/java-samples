@@ -9,7 +9,7 @@ public class HybridSortTest extends BaseAbstractSortTest {
     final HybridSort<Integer> hs = new HybridSort<>(Integer::compare);
 
     HybridSortTest() {
-        super("Hybrid Sort 2", 1000000);
+        super("Hybrid Sort", 1000000);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.sort;
 
-import java.util.Arrays;
 import java.util.Comparator;
 
 public class HybridSort<T> extends BaseSort<T> {
@@ -47,19 +46,60 @@ public class HybridSort<T> extends BaseSort<T> {
         shortSort(a, start, end);
     }
 
-    protected void hybridMergeSort(final T[] a, final int length) {
-        int partition;
+    void swapIfNecessary(final T[] a, final int left, final int right) {
+        boolean reversed = isLeft(a[right], a[left]);
+        final int swap = reversed ? right : left;
+        swap(a, left, swap);
+    }
 
-        if (length < 1000) {
+    int sortEnds(final T[] a, int start, int end) {
+        swapIfNecessary(a, start, end);
+
+        while (start < end) {
+            final int nextStart = start + 1;
+            final int nextEnd = end - 1;
+            swapIfNecessary(a, nextStart, nextEnd);
+
+            if (!isLeftOrSame(a[start], a[nextStart])) {
+                break;
+            }
+
+            start = nextStart;
+            end = nextEnd;
+        }
+
+        return start < end ? start : -1;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void hybridMergeSort(final T[] a, final int length) {
+        final int partition;
+        final int newStart;
+        T[] b;
+
+        if (length < 1024) {
             hybridSort(a, 0, length - 1);
+            return;
+        }
+
+        newStart = sortEnds(a, 0, length - 1);
+
+        if (newStart < 0 ) {
             return;
         }
 
         partition = length / 2;
 
-        final T[] b = Arrays.copyOfRange(a, partition, length);
+        // Reuse array to keep from polluting the heap and causing a lot of garbage collection.
+        b = (T[]) new Object[length - partition];
+        if (newStart < 8) {
+            hybridMergeSort(a, partition);
+        } else {
+            System.arraycopy(a, newStart, b, 0, partition - newStart + 1);
+            ms.merge(a, b, partition, length - newStart);
+        }
 
-        hybridMergeSort(a, partition);
+        System.arraycopy(a, partition, b, 0, length - partition);
         hybridMergeSort(b, b.length);
 
         ms.merge(a, b, partition, length);
