@@ -57,10 +57,16 @@ public class HybridSort<T> extends BaseSort<T> {
      * Reverse sort array a from 0 to j. Returns True if array a is now sorted.
      *
      * @param a The array to sort.
+     * @param sortedTo The index of the last identified sorted item in array a.
      * @param j The index of the end of the items to be sorted.
      * @return True if the entire array is sorted.
      */
-    boolean reverseSortEnd(final T[] a, int j) {
+    boolean reverseSortEnd(final T[] a, final int sortedTo, int j) {
+        // If the array can not possibly be reverse sorted, short circuit. This means sortedTo must be less than j/2.
+        if (sortedTo + sortedTo > j) {
+            return false;
+        }
+
         int i = 0;
         int nextI = i + 1;
         int nextJ = j - 1;
@@ -104,7 +110,7 @@ public class HybridSort<T> extends BaseSort<T> {
         }
 
         // Either i is not less than end and the entire array or check to see if a is reverse sorted.
-        return i >= end || reverseSortEnd(a, end);
+        return i >= end || reverseSortEnd(a, i, end);
     }
 
     /**
