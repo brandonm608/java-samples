@@ -77,7 +77,7 @@ public class App {
         long deltaTime;
 
         deltaTime = System.currentTimeMillis();
-        algorithm.getAlgorithm().accept(a, Integer::compareTo);
+        algorithm.getAlgorithm().accept(a, Integer::compare);
         deltaTime = System.currentTimeMillis() - deltaTime;
 
         println(out, algorithm.getName() + " took " + deltaTime + "ms to complete");
@@ -100,14 +100,20 @@ public class App {
                     Integer[] copy1 = Arrays.copyOf(filledArray, filledArray.length);
                     Integer[] copy2 = Arrays.copyOf(filledArray, filledArray.length);
                     Integer[] copy3 = Arrays.copyOf(filledArray, filledArray.length);
+                    Integer[] copy4 = Arrays.copyOf(filledArray, filledArray.length);
+                    Integer[] copy5 = Arrays.copyOf(filledArray, filledArray.length);
                     long deltaTime1, deltaTime2, deltaTime3;
                     boolean isArrayEqual;
 
-                    sort(out, ALGORITHM.ARRAYS_SORT, filledArray);
                     deltaTime1 = sort(out, algorithm, copy1);
                     deltaTime2 = sort(out, algorithm, copy2);
                     deltaTime3 = sort(out, algorithm, copy3);
 
+                    println(out, "The median time of 3 runs is " + medianOf3(deltaTime1, deltaTime2, deltaTime3) + "ms");
+
+                    deltaTime1 = sort(out, ALGORITHM.ARRAYS_SORT, filledArray);
+                    deltaTime2 = sort(out, ALGORITHM.ARRAYS_SORT, copy4);
+                    deltaTime3 = sort(out, ALGORITHM.ARRAYS_SORT, copy5);
                     println(out, "The median time of 3 runs is " + medianOf3(deltaTime1, deltaTime2, deltaTime3) + "ms");
 
                     isArrayEqual = isArraysEqual(filledArray, copy1);

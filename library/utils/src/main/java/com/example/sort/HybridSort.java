@@ -1,5 +1,6 @@
 package com.example.sort;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 public class HybridSort<T> extends BaseSort<T> {
@@ -47,59 +48,97 @@ public class HybridSort<T> extends BaseSort<T> {
     }
 
     void swapIfNecessary(final T[] a, final int left, final int right) {
-        boolean reversed = isLeft(a[right], a[left]);
-        final int swap = reversed ? right : left;
+        boolean sorted = isLeft(a[left], a[right]);
+        final int swap = sorted ? left : right;
         swap(a, left, swap);
     }
 
-    int sortEnds(final T[] a, int start, int end) {
-        swapIfNecessary(a, start, end);
+    /**
+     * Reverse sort array a from 0 to j. Returns True if array a is now sorted.
+     *
+     * @param a The array to sort.
+     * @param j The index of the end of the items to be sorted.
+     * @return True if the entire array is sorted.
+     */
+    boolean reverseSortEnd(final T[] a, int j) {
+        int i = 0;
+        int nextI = i + 1;
+        int nextJ = j - 1;
 
-        while (start < end) {
-            final int nextStart = start + 1;
-            final int nextEnd = end - 1;
-            swapIfNecessary(a, nextStart, nextEnd);
+        while (i < j) {
+            swapIfNecessary(a, i, j);
 
-            if (!(isLeftOrSame(a[start], a[nextStart]) && isLeftOrSame(a[nextEnd], a[end]))) {
+            if (isLeft(a[nextI], a[i]) || isLeft(a[j], a[nextJ])) {
+                // Exit loop when nextI or nextJ are an out of order item.
                 break;
             }
 
-            start = nextStart;
-            end = nextEnd;
+            i = nextI;
+            nextI++;
+            j=nextJ;
+            nextJ--;
         }
 
-        return start < end ? start : -1;
+        return j < i;
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Detects if array a is sorted from 0 to end or not.
+     *
+     * @param a The array to check if it is sorted.
+     * @param end The upper bound of indexes in array a to check.
+     * @return True if a is sorted.
+     */
+    boolean sortEnds(final T[] a, final int end) {
+        int i = 0;
+        int nextI = i + 1;
+
+        while (i < end) {
+            if (isLeft(a[nextI], a[i])) {
+                // Exit the loop when nextI is an out of order item.
+                break;
+            }
+
+            i = nextI;
+            nextI++;
+        }
+
+        // Either i is not less than end and the entire array or check to see if a is reverse sorted.
+        return i >= end || reverseSortEnd(a, end);
+    }
+
+    /**
+     * A modified merge sort algorithm that uses merge sort until it reaches a defined size. It then switches to
+     * quicksort. Additionally, a sorted run from 0 to length - 1 is identified. If the items from 0 to length - 1
+     * are reverse sorted, this is corrected and the sorted run is identified.
+     *
+     * @param a The array to sort.
+     * @param length The length of the unsorted part of the array. In this algorithm, the array is partitioned
+     *               making the length less than a.length. However, the unsorted array is from 0 to length.
+     */
     protected void hybridMergeSort(final T[] a, final int length) {
+        final boolean sorted;
         final int partition;
-        final int newStart;
-        T[] b;
+        final T[] b;
 
         if (length < 1024) {
+            // At this point, if there is a sorted run, there are still unsorted items. Therefore, disregarde newStart.
             hybridSort(a, 0, length - 1);
             return;
         }
 
-        newStart = sortEnds(a, 0, length - 1);
+        // For the sortEnds method length - 1 corresponds to the end parameter because there is no starting
+        // from an offset.
+        sorted = sortEnds(a, length - 1);
 
-        if (newStart < 0 ) {
+        if (sorted) {
             return;
         }
 
         partition = length / 2;
 
-        // Reuse array to keep from polluting the heap and causing a lot of garbage collection.
-        b = (T[]) new Object[length - partition];
-        if (newStart < 8) {
-            hybridMergeSort(a, partition);
-        } else {
-            System.arraycopy(a, newStart, b, 0, partition - newStart + 1);
-            ms.merge(a, b, partition, length - newStart);
-        }
-
-        System.arraycopy(a, partition, b, 0, length - partition);
+        hybridMergeSort(a, partition);
+        b = Arrays.copyOfRange(a, partition, length);
         hybridMergeSort(b, b.length);
 
         ms.merge(a, b, partition, length);

@@ -46,7 +46,7 @@ public abstract class BaseAbstractSortTest {
     protected void jdkSortCompare(Integer[] a) {
         Integer[] copy = Arrays.copyOf(a, a.length);
 
-        Arrays.sort(copy, Integer::compareTo);
+        Arrays.sort(copy, Integer::compare);
         this.sort(a);
 
         checkArray(a, copy);
@@ -130,7 +130,13 @@ public abstract class BaseAbstractSortTest {
 
     private void reversedDifferentialTestImpl() {
         Integer[] a = createFilledArray(getDifferentialTestLength());
-        Arrays.sort(a, (i1, i2) -> Integer.compare(i2, i1));
+        Arrays.sort(a, Integer::compare);
+
+        for (int i = 0, j = a.length - 1; i < j; i++, j--) {
+            final Integer tmp = a[i];
+            a[i] = a[j];
+            a[j] = tmp;
+        }
 
         jdkSortCompare(a);
     }
