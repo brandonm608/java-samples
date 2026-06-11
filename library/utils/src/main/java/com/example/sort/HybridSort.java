@@ -30,7 +30,7 @@ public class HybridSort<T> extends BaseSort<T> {
         }
 
         if (end - start > 7) {
-            final QuickSort.MutableIntTuple tuple;
+            final QuickSort.ImmutableIntTuple tuple;
             final int startIndex;
             final int endIndex;
 

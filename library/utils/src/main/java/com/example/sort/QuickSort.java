@@ -3,9 +3,14 @@ package com.example.sort;
 import java.util.Comparator;
 
 public class QuickSort<T> extends BaseSort<T> {
-	static class MutableIntTuple {
-		int first = 0;
-		int second = 0;
+	static class ImmutableIntTuple {
+		final int first;
+		final int second;
+
+		ImmutableIntTuple(int first, int second) {
+			this.first = first;
+			this.second = second;
+		}
 	}
 
 	public static <T> void sort(final T[] a, final Comparator<T> cmp) {
@@ -48,8 +53,7 @@ public class QuickSort<T> extends BaseSort<T> {
 		swap(a, swapIndex, right);
 	}
 
-	MutableIntTuple partition(final T[] a, final int start, final int end) {
-		final MutableIntTuple tuple = new MutableIntTuple();
+	ImmutableIntTuple partition(final T[] a, final int start, final int end) {
 		final T pivot;
 		int unprocessed = start;
 		int pivotsInsertionStart = start;
@@ -86,15 +90,12 @@ public class QuickSort<T> extends BaseSort<T> {
 			unprocessed++;
 		}
 
-		tuple.first = pivotsInsertionStart;
-		tuple.second = pivotsInsertionStart + end - pivotsStart;
-
-		return tuple;
+		return new ImmutableIntTuple(pivotsInsertionStart, pivotsInsertionStart + end - pivotsStart);
 	}
 
 	void quickSort(final T[] a, final int start, final int end) {
 		if (start < end) {
-			final MutableIntTuple tuple;
+			final ImmutableIntTuple tuple;
 			final int startPivotIndex;
 			final int endPivotIndex;
 
