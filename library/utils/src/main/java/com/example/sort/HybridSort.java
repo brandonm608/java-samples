@@ -47,45 +47,35 @@ public class HybridSort<T> extends BaseSort<T> {
         shortSort(a, start, end);
     }
 
-    void swapIfNecessary(final T[] a, final int left, final int right) {
+    int swapIfNecessary(final T[] a, final int left, final int right) {
         boolean sorted = isLeft(a[left], a[right]);
         final int swap = sorted ? left : right;
         swap(a, left, swap);
+        return swap;
     }
 
     /**
      * Reverse sort array a from 0 to j. Returns True if array a is now sorted.
      *
      * @param a The array to sort.
-     * @param sortedTo The index of the last identified sorted item in array a.
-     * @param j The index of the end of the items to be sorted.
+     * @param end The index of the end of the items to be sorted.
      * @return True if the entire array is sorted.
      */
-    boolean reverseSortEnd(final T[] a, final int sortedTo, int j) {
-        // If the array can not possibly be reverse sorted, short circuit. This means sortedTo must be less than j/2.
-        if (sortedTo + sortedTo > j) {
-            return false;
-        }
-
+    boolean reverseSort(final T[] a, final int end) {
         int i = 0;
         int nextI = i + 1;
-        int nextJ = j - 1;
+        int j = end;
 
         while (i < j) {
-            swapIfNecessary(a, i, j);
-
-            if (isLeft(a[nextI], a[i]) || isLeft(a[j], a[nextJ])) {
-                // Exit loop when nextI or nextJ are an out of order item.
-                break;
-            }
+            final int nextJ = swapIfNecessary(a, i, j) - 1;
 
             i = nextI;
             nextI++;
             j=nextJ;
-            nextJ--;
         }
 
-        return j < i;
+        // If 2i >= end the array has been sorted. If it is not sorted, check if it is sorted.
+        return end - i - i <= 0 || sorted(a, end);
     }
 
     /**
@@ -95,22 +85,17 @@ public class HybridSort<T> extends BaseSort<T> {
      * @param end The upper bound of indexes in array a to check.
      * @return True if a is sorted.
      */
-    boolean sortEnds(final T[] a, final int end) {
+    boolean sorted(final T[] a, final int end) {
         int i = 0;
         int nextI = i + 1;
 
-        while (i < end) {
-            if (isLeft(a[nextI], a[i])) {
-                // Exit the loop when nextI is an out of order item.
-                break;
-            }
-
+        while (i < end && isLeftOrSame(a[i], a[nextI])) {
             i = nextI;
             nextI++;
         }
 
         // Either i is not less than end and the entire array or check to see if a is reverse sorted.
-        return i >= end || reverseSortEnd(a, i, end);
+        return i >= end;
     }
 
     /**
@@ -128,14 +113,11 @@ public class HybridSort<T> extends BaseSort<T> {
         final T[] b;
 
         if (length < 1024) {
-            // At this point, if there is a sorted run, there are still unsorted items. Therefore, disregarde newStart.
             hybridSort(a, 0, length - 1);
             return;
         }
 
-        // For the sortEnds method length - 1 corresponds to the end parameter because there is no starting
-        // from an offset.
-        sorted = sortEnds(a, length - 1);
+        sorted = reverseSort(a, length - 1);
 
         if (sorted) {
             return;
